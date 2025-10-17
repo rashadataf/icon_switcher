@@ -9,6 +9,14 @@
     "start": "react-native start",
     "test": "jest"
   },
+  "codegenConfig": {
+    "name": "NativeIconSwitcherSpecs",
+    "type": "modules",
+    "jsSrcsDir": "specs",
+    "android": {
+      "javaPackageName": "com.icon_switcher"
+    }
+  },
   "dependencies": {
     "react": "19.1.1",
     "react-native": "0.82.0",
