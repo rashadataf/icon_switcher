@@ -5,12 +5,13 @@
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
-      android:icon="@mipmap/ic_launcher"
+      android:icon="@mipmap/ic_launcher_primary"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme"
       android:usesCleartextTraffic="${usesCleartextTraffic}"
-      android:supportsRtl="true">
+      android:supportsRtl="true"
+      android:exported="true">
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -19,9 +20,43 @@
         android:windowSoftInputMode="adjustResize"
         android:exported="true">
         <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
+           <action android:name="android.intent.action.MAIN" />
         </intent-filter>
       </activity>
+
+        <receiver
+            android:name=".RelaunchReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.icon_switcher.ACTION_CHANGE_ICON" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Primary icon (enabled at install) -->
+        <activity-alias
+            android:name=".MainActivityPrimary"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_primary"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Alternate icon (disabled at install) -->
+        <activity-alias
+            android:name=".MainActivityAlt"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_alt"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
     </application>
 </manifest>

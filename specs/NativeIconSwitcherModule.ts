@@ -12,13 +12,6 @@ export type IconName = string | null | undefined;
 
 export interface Spec extends TurboModule {
     /**
-     * Returns true if the current platform/runtime supports dynamic launcher icons.
-     * iOS: true on 10.3+ when supportsAlternateIcons is true.
-     * Android: always true (alias toggling is used).
-     */
-    isSupported(): boolean;
-
-    /**
      * Resolves with the currently active icon name, or null for the primary icon.
      * iOS: whatever UIApplication.shared.alternateIconName returns (nullable).
      * Android: the friendly name you mapped to the enabled alias, or null for primary.
@@ -34,5 +27,5 @@ export interface Spec extends TurboModule {
     setIcon(name?: IconName): Promise<void>;
 }
 
-// The native module must be registered as "IconSwitcher".
-export default TurboModuleRegistry.getEnforcing<Spec>('IconSwitcher');
+// The native module must be registered as "NativeIconSwitcherModule".
+export default TurboModuleRegistry.getEnforcing<Spec>('NativeIconSwitcherModule');

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import IconSwitcher from '../../specs/NativeIconSwitcher';
+import IconSwitcher from '../../specs/NativeIconSwitcherModule';
+import type { IconName } from '../../specs/NativeIconSwitcherModule';
 
 type Options = {
     onChange?: (current: string | null) => void;
@@ -7,20 +8,18 @@ type Options = {
 };
 
 type UseAppIcon = {
-    supported: boolean;
     current: string | null; // null = primary
     pending: boolean;
     error: unknown | null;
 
     refresh: () => Promise<void>;
-    setIcon: (name: string | null) => Promise<void>;
+    setIcon: (name: IconName) => Promise<void>;
     reset: () => Promise<void>;
 };
 
 export const useAppIcon = (options: Options = {}): UseAppIcon => {
     const { onChange, onError } = options;
 
-    const [supported, setSupported] = useState<boolean>(false);
     const [current, setCurrent] = useState<string | null>(null);
     const [pending, setPending] = useState(false);
     const [error, setError] = useState<unknown | null>(null);
@@ -31,13 +30,6 @@ export const useAppIcon = (options: Options = {}): UseAppIcon => {
     useEffect(
         () => {
             mounted.current = true;
-
-            // Check support.
-            try {
-                setSupported(IconSwitcher.isSupported());
-            } catch {
-                setSupported(false);
-            }
 
             // Initial read of current icon.
             IconSwitcher.getIcon()
@@ -77,7 +69,7 @@ export const useAppIcon = (options: Options = {}): UseAppIcon => {
     );
 
     const setIcon = useCallback(
-        async (name: string | null) => {
+        async (name: IconName) => {
             if (inFlight.current) return;
             inFlight.current = true;
             setPending(true);
@@ -104,5 +96,21 @@ export const useAppIcon = (options: Options = {}): UseAppIcon => {
 
     const reset = useCallback(() => setIcon(null), [setIcon]);
 
-    return { supported, current, pending, error, refresh, setIcon, reset };
+    return { current, pending, error, refresh, setIcon, reset };
 };
+
+
+export enum AppIcon {
+    Primary = 'primary',
+    Alt = 'alt', // your one alternate icon
+}
+
+/** Map enum → TurboModule IconName (string | null) */
+export function iconToName(icon: AppIcon): IconName {
+    return icon === AppIcon.Primary ? null : AppIcon.Alt.toString();
+}
+
+/** Human-friendly label (for UI) */
+export function iconLabel(icon: AppIcon): string {
+    return icon === AppIcon.Primary ? 'Primary' : 'Alternate';
+}
